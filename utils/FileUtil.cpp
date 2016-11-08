@@ -2,6 +2,8 @@
 #include <QFile>
 #include <QTextStream>
 
+const QString FileUtil::NEW_LINE = "\n";
+
 /** 读取文本内容 **/
 QString FileUtil::read(QString filename) {
     QFile qf(filename);

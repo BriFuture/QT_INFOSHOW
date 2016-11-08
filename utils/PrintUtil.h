@@ -38,6 +38,9 @@ public:
      * @param flag  分隔符的界定符，默认为空字符串
     **/
     static void print(QString str, QString flag="");
+    static void print(int num, QString flag="");
+    static void print(float fnum, QString flag="");
+    static void print(double dnum, QString flag="");
 };
 
 #endif // TIPUTIL_H

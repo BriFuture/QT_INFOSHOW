@@ -14,6 +14,18 @@ void PrintUtil::print(QString str, QString flag) {
     }
 }
 
+void PrintUtil::print(int num, QString flag) {
+    print(QString::number(num), flag);
+}
+
+void PrintUtil::print(float fnum, QString flag) {
+    print(QString::number(fnum), flag);
+}
+
+void PrintUtil::print(double dnum, QString flag) {
+    print(QString::number(dnum), flag);
+}
+
 // 直接输出调试信息
 void PrintUtil::debug(QString str, QString flag) {
     printSeperator(flag, 1);  // 分隔符 start

@@ -1,5 +1,6 @@
 #include "ui/mainwindow.h"
 #include "ui/FloatWidget.h"
+#include "main/Configure.h"
 #include <QApplication>
 #include <QTextCodec>
 
@@ -13,7 +14,6 @@ int main(int argc, char *argv[])
 //    w.show();
     FloatWidget fw;
     fw.show();
-
 
     return a.exec();
 }

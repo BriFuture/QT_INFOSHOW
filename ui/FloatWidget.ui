@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>174</width>
-    <height>55</height>
+    <width>154</width>
+    <height>42</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QLabel" name="trans_label">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>10</y>
+     <x>10</x>
+     <y>20</y>
      <width>71</width>
      <height>21</height>
     </rect>
@@ -26,43 +26,43 @@
     <string>上传速度</string>
    </property>
   </widget>
-  <widget class="QLabel" name="recv_flow_label">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>30</y>
-     <width>56</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>下载流量</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="trans_flow_label">
-   <property name="geometry">
-    <rect>
-     <x>110</x>
-     <y>30</y>
-     <width>56</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>上传流量</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="recv_label">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>10</y>
+     <y>0</y>
      <width>71</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
     <string>下载速度</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="recv_flow_label">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>0</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>下载速度</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="trans_flow_label">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>20</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>上传速度</string>
    </property>
   </widget>
  </widget>

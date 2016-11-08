@@ -13,7 +13,7 @@ NetInfo::NetInfo() {
 }
 
 NetInfo::~NetInfo() {
-
+    delete timer;
 }
 
 QStringList NetInfo::getInterfaces() {
@@ -154,7 +154,7 @@ bool NetInfo::getNfoFromList(QString ifname,NetFlowObject **nfo) {
 
 void NetInfo::refreshNetInfo() {
     QString netinfo = FileUtil::readAll(FILE_NET_DEV);
-    QStringList lineList = netinfo.split("\n");
+    QStringList lineList = netinfo.split(FileUtil::NEW_LINE);
     // 每次刷新时都要先将 interfaces 数据清空
 //    interfaces.clear();
 //    PrintUtil::print("刷新网络数据...");

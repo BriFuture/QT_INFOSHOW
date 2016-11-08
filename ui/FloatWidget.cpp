@@ -7,6 +7,9 @@
 
 #include <QMenu>
 #include <QAction>
+#include <QActionGroup>
+
+const QString FloatWidget::CONFIG_PREFIX = "float_window_";
 
 FloatWidget::FloatWidget(QWidget *parent) :
     QWidget(parent),
@@ -15,28 +18,37 @@ FloatWidget::FloatWidget(QWidget *parent) :
     ui->setupUi(this);
     QObject::connect(ni, SIGNAL(infoUpdate()), this, SLOT(updateNetInfo()));
     QObject::connect(ni, SIGNAL(netlistUpdate()), this, SLOT(updateNetList()));
-
-    bg_img_path = ":/res/bg.png";
-
+    initFromConfig();
     initUI();
 }
 
 FloatWidget::~FloatWidget()
 {
     delete ui;
+    delete ni;
+    delete config;
+}
+
+void FloatWidget::initFromConfig() {
+    config = Configure::getConfigure();
+    config->readConfig();
+    int px = config->getValue(CONFIG_PREFIX + "x", 0).toInt();
+    int py = config->getValue(CONFIG_PREFIX + "y", 0).toInt();
+    bg_img_path = config->getValue(CONFIG_PREFIX + "bg_img", ":/res/bg.png").toString();
+    opacity = config->getValue(CONFIG_PREFIX + "opacity", QString::number(0.8)).toDouble();
+    this->setWindowOpacity(opacity);
+    this->move(px, py);
 }
 
 void FloatWidget::initUI() {
 //    setWindowFlags(Qt::WindowStaysOnTopHint);  //置顶
 //    setWindowFlags(Qt::Widget);  // 取消置顶
-
-    this->setWindowOpacity(0.9);
     // 设置窗体 Flag
     setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
-//    setAttribute(Qt::WA_TranslucentBackground, true);
-//    setStyleSheet("background-image:url(:/res/bg.png);");
     setAutoFillBackground(true);
     //设置背景
+//    setAttribute(Qt::WA_TranslucentBackground, true);
+//    setStyleSheet("background-image:url(:/res/bg.png);");
     setBackgroundImg(bg_img_path);
     update();
 
@@ -88,15 +100,69 @@ void FloatWidget::mousePressEvent(QMouseEvent *event) {
     } else if(event->button() == Qt::RightButton) {
         // 弹出菜单
 //        PrintUtil::print("right clicked!");
-        QMenu popmenu(this);
-        QAction quit_action(this);
-        quit_action.setText("退出");
-        popmenu.addAction(&quit_action);
-        connect(&quit_action, &QAction::triggered, this, &QWidget::close);
-        popmenu.exec(cursor().pos());
+        popUpMenu();
     }
 }
 
+void FloatWidget::popUpMenu() {
+    QMenu popmenu(this);
+
+    // 设置透明度菜单
+    QMenu opacitySubMenu(&popmenu);
+    QActionGroup opacityGroup(&popmenu);
+    opacitySubMenu.setTitle("透明度");
+    QAction opacity_action_100("100%", &popmenu);
+    opacity_action_100.setData(100);
+    QAction opacity_action_80("80%", &popmenu);
+    opacity_action_80.setData(80);
+    QAction opacity_action_60(" 60%", &popmenu);
+    opacity_action_60.setData(60);
+    QAction opacity_action_40(" 40%", &popmenu);
+    opacity_action_40.setData(40);
+    // 设置选中透明度
+    switch(QVariant(opacity * 100).toInt()) {
+    case 100:
+        opacity_action_100.setText("100% ○");
+        break;
+    case 60:
+        opacity_action_60.setText("60% ○");
+        break;
+    case 40:
+        opacity_action_40.setText("40% ○");
+        break;
+    case 80:
+    default:
+        opacity_action_80.setText("80% ○");
+        break;
+    }
+
+    opacityGroup.addAction(&opacity_action_100);
+    opacityGroup.addAction(&opacity_action_80);
+    opacityGroup.addAction(&opacity_action_60);
+    opacityGroup.addAction(&opacity_action_40);
+    opacitySubMenu.addActions(opacityGroup.actions());
+
+    // 退出按钮
+    QAction quit_action(&popmenu);
+    quit_action.setText("退出");
+
+    popmenu.addMenu(&opacitySubMenu);
+    popmenu.addAction(&quit_action);
+
+    // 连接信号和槽
+    QObject::connect(&quit_action, &QAction::triggered, this, &QWidget::close);
+//    QObject::connect(&opacity_action_100, &QAction::trigger, this, SLOT(setOpacity(int)));
+    QObject::connect(&opacityGroup, SIGNAL(triggered(QAction *)), this, SLOT(setOpacity(QAction *)));
+    // 设置弹出菜单位置
+    popmenu.exec(cursor().pos());
+}
+
+void FloatWidget::setOpacity(QAction *action) {
+//    PrintUtil::print(action->data().toInt(), "opacity");
+    double opac = action->data().toInt() / 100.0;
+    setWindowOpacity(opac);
+    config->setValue(CONFIG_PREFIX + "opacity", opac);
+}
 
 void FloatWidget::mouseMoveEvent(QMouseEvent *event) {
 //    QPoint temppoint = event->pos();
@@ -104,4 +170,20 @@ void FloatWidget::mouseMoveEvent(QMouseEvent *event) {
     QPoint mousePos = cursor().pos();
 //    PrintUtil::print("mouse l: "+ QString::number(mousePos.x()) + "  r: "+ QString::number(mousePos.y()));
     this->move(mousePos.x()-inPoint.x(), mousePos.y()-inPoint.y());
+//    Configure * config = Configure::getConfigure();
+    config->setValue(CONFIG_PREFIX + "x", mousePos.x()-inPoint.x());
+    config->setValue(CONFIG_PREFIX + "y", mousePos.y()-inPoint.y());
+}
+
+void FloatWidget::closeEvent(QCloseEvent *event) {
+    if(this->isVisible())
+        this->hide();
+
+    ni->stopRefresh();
+    // 将修改的配置写入文件
+//    Configure * config = Configure::getConfigure();
+    config->setValue(CONFIG_PREFIX + "bg_img", bg_img_path);
+    while(!config->writeConfig());  //等待文件写入
+    PrintUtil::print("配置文件写入完成。");
+    event->accept();
 }

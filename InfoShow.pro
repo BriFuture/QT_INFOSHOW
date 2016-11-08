@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     utils/FileUtil.cpp \
     main/NetFlowObject.cpp \
     main/NetInfo.cpp \
-    ui/FloatWidget.cpp
+    ui/FloatWidget.cpp \
+    main/Configure.cpp
 
 HEADERS  += ui/mainwindow.h \
     version.h \
@@ -28,7 +29,8 @@ HEADERS  += ui/mainwindow.h \
     utils/PrintUtil.h \
     main/NetFlowObject.h \
     main/NetInfo.h \
-    ui/FloatWidget.h
+    ui/FloatWidget.h \
+    main/Configure.h
 
 FORMS    += ui/mainwindow.ui \
     ui/FloatWidget.ui

@@ -9,6 +9,8 @@ class FileUtil;
 
 class FileUtil {
 public:
+    const static QString NEW_LINE;
+public:
     static QString read(QString filename);
     static bool write(QString filename, QString content);
     static QString readAll(QString filename);
