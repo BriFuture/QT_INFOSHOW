@@ -9,6 +9,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QCloseEvent>
+#include <QThread>
 #include "../main/NetInfo.h"
 #include "../main/Configure.h"
 
@@ -34,17 +35,23 @@ public:
 private:
     Ui::FloatWidget *ui;
     NetInfo *ni;
+//    QThread nithread;
     Configure * config;
     QStringList netiflist;
     QPoint inPoint;  // 窗口内部坐标
     QPixmap bg_img;
-    QString bg_img_path;
-    double opacity;
+    QString bg_img_path;  // 背景图片路径
+    int opacity;
+    bool isontop;
+    QString select_img;
+
     const static QString CONFIG_PREFIX;
+
 
 public slots:
     void updateNetInfo();
     void updateNetList();
+    void windowOnTop(bool ontop);
     // 设置背景图片
     void setBackgroundImg(QString imgpath);
     /**

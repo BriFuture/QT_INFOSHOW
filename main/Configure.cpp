@@ -1,9 +1,9 @@
 #include "Configure.h"
 #include "../utils/FileUtil.h"
 #include "../utils/PrintUtil.h"
+#include <QCoreApplication>
 #include <QMapIterator>
-
-const QString Configure::CONFIGURE_FILE = "./is.config";
+const QString Configure::CONFIGURE_FILE = "/is.cfg";
 const QString Configure::CONFIGURE_SEPE_FLAG = " :: ";
 Configure * Configure::config = NULL;
 
@@ -43,7 +43,7 @@ QString Configure::toString() {
 //        PrintUtil::printSeperator("mit");
         str.append(mit.key() + CONFIGURE_SEPE_FLAG + mit.value().toString() + FileUtil::NEW_LINE);
     }
-    PrintUtil::print(str);
+//    PrintUtil::print(str);
     return str;
 }
 
@@ -56,7 +56,7 @@ void Configure::setValue(QString key, QVariant value) {
 }
 
 void Configure::readConfig() {
-    QString configures = FileUtil::readAll(CONFIGURE_FILE);
+    QString configures = FileUtil::readAll(getConfigurePath());
     QStringList csl = configures.split(FileUtil::NEW_LINE);
     for(int i=0; i < csl.count(); i++) {
         QString line = csl.at(i);
@@ -67,15 +67,20 @@ void Configure::readConfig() {
     }
 }
 
+QString Configure::getConfigurePath() {
+//    PrintUtil::print(QCoreApplication::applicationDirPath());
+    return QCoreApplication::applicationDirPath() + CONFIGURE_FILE;
+}
+
 bool Configure::writeConfig() {
     /* 写入配置文件中 */
    return writeConfig(toString());
 }
 
 bool Configure::writeConfig(QString content) {
-    return FileUtil::write(CONFIGURE_FILE, content);
+    return FileUtil::write(getConfigurePath(), content);
 }
 
 bool Configure::resetConfigFile() {
-    writeConfig("");
+    return writeConfig("");
 }

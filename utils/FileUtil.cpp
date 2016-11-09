@@ -1,9 +1,10 @@
 #include "FileUtil.h"
 #include <QFile>
 #include <QTextStream>
+#include "PrintUtil.h"
 
 const QString FileUtil::NEW_LINE = "\n";
-
+QString FileUtil::appCurrentPath = "";
 /** 读取文本内容 **/
 QString FileUtil::read(QString filename) {
     QFile qf(filename);

@@ -8,12 +8,12 @@ const int NetInfo::REFRESH_RATE = 1200;  // 刷新速率，单位 ms
 
 NetInfo::NetInfo() {
     timer = new QTimer(this);
-    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(refreshNetInfo()));
+    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(refreshNetInfo()), Qt::DirectConnection);
     timer->start(NetInfo::REFRESH_RATE);
 }
 
 NetInfo::~NetInfo() {
-    delete timer;
+//    delete timer;
 }
 
 QStringList NetInfo::getInterfaces() {
@@ -197,5 +197,6 @@ void NetInfo::refreshNetInfo() {
 }
 
 void NetInfo::stopRefresh() {
-    timer->stop();
+    if(timer->isActive())
+        timer->stop();
 }

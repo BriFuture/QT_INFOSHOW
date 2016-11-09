@@ -8,8 +8,8 @@
 
 class Configure {
 public:
-    const static QString CONFIGURE_FILE;
     const static QString CONFIGURE_SEPE_FLAG;
+    const static QString CONFIGURE_FILE;
 private:
     QString ckey;
     QVariant cvalue;
@@ -21,6 +21,8 @@ private:
 public:
     ~Configure();
     static Configure * getConfigure();
+
+    QString getConfigurePath();
     /**
      * @brief getAllKeys 获取所有的键
      * @return
